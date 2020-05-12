@@ -29,6 +29,9 @@ import reactor.core.Scannable;
 import reactor.util.annotation.Nullable;
 import reactor.util.context.Context;
 
+import static reactor.core.Scannable.Attr.RUN_STYLE;
+import static reactor.core.Scannable.Attr.RunStyle.SYNC;
+
 /**
  * Shares a {@link Mono} for the duration of a function that may transform it and
  * consume it as many times as necessary without causing multiple subscriptions
@@ -71,6 +74,12 @@ final class MonoPublishMulticast<T, R> extends MonoOperator<T, R> implements Fus
 		}
 
 		source.subscribe(multicast);
+	}
+
+	@Override
+	public Object scanUnsafe(Attr key) {
+		if (key == RUN_STYLE) return Attr.RunStyle.SYNC;
+		return super.scanUnsafe(key);
 	}
 
 	static final class MonoPublishMulticaster<T> extends Mono<T>
@@ -133,6 +142,9 @@ final class MonoPublishMulticast<T, R> extends MonoOperator<T, R> implements Fus
 			}
 			if (key == Attr.BUFFERED) {
 				return value != null ? 1 : 0;
+			}
+			if (key == RUN_STYLE) {
+			    return Attr.RunStyle.SYNC;
 			}
 
 			return null;
@@ -355,6 +367,9 @@ final class MonoPublishMulticast<T, R> extends MonoOperator<T, R> implements Fus
 			}
 			if (key == Attr.CANCELLED) {
 				return cancelled == 1;
+			}
+			if (key == RUN_STYLE) {
+			    return Attr.RunStyle.SYNC;
 			}
 
 			return InnerProducer.super.scanUnsafe(key);

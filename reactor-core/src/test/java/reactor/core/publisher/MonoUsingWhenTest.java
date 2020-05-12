@@ -379,6 +379,8 @@ public class MonoUsingWhenTest {
 				.isSameAs(op.scanUnsafe(Attr.TERMINATED))
 				.isSameAs(op.scanUnsafe(Attr.TAGS))
 				.isNull();
+
+		assertThat(op.scanUnsafe(Attr.RUN_STYLE)).isEqualTo(Attr.RunStyle.SYNC);
 	}
 
 	@Test
@@ -396,6 +398,8 @@ public class MonoUsingWhenTest {
 		assertThat(op.scan(Attr.TERMINATED)).as("TERMINATED").isFalse();
 		op.resourceProvided = true;
 		assertThat(op.scan(Attr.TERMINATED)).as("TERMINATED resourceProvided").isTrue();
+
+		assertThat(op.scan(Attr.RUN_STYLE)).isEqualTo(Attr.RunStyle.SYNC);
 
 		assertThat(op.scanUnsafe(Attr.CANCELLED)).as("CANCELLED not supported").isNull();
 	}

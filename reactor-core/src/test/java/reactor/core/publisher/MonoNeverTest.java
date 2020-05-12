@@ -16,7 +16,11 @@
 package reactor.core.publisher;
 
 import org.junit.Test;
+import reactor.core.Scannable;
 import reactor.test.subscriber.AssertSubscriber;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static reactor.core.Scannable.*;
 
 public class MonoNeverTest {
 
@@ -27,5 +31,12 @@ public class MonoNeverTest {
 		    .assertSubscribed()
 		    .assertNoError()
 		    .assertNotComplete();
+	}
+
+	@Test
+	public void scanOperator() {
+		Mono<String> test = Mono.never();
+
+		assertThat(from(test).scan(Attr.RUN_STYLE)).isEqualTo(Attr.RunStyle.SYNC);
 	}
 }

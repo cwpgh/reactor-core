@@ -79,4 +79,10 @@ final class MonoRepeatWhen<T> extends FluxFromMonoOperator<T, T> {
 			source.subscribe(main);
 		}
 	}
+
+	@Override
+	public Object scanUnsafe(Attr key) {
+		if (key == Attr.RUN_STYLE) return Attr.RunStyle.SYNC;
+		return super.scanUnsafe(key);
+	}
 }

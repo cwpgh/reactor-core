@@ -210,6 +210,15 @@ public interface Scannable {
 		 */
 		public static final Attr<Stream<Tuple2<String, String>>> TAGS = new Attr<>(null);
 
+		//TODO: delete this attribute before final rebase
+		public static final Attr<Boolean> THREAD_MODIFIER = new Attr<>(false);
+
+		public static final Attr<RunStyle> RUN_STYLE = new Attr<>(RunStyle.UNKNOWN);
+
+		public enum RunStyle {
+			UNKNOWN, SYNC, ASYNC;
+		}
+
 		/**
 		 * Meaningful and always applicable default value for the attribute, returned
 		 * instead of {@literal null} when a specific value hasn't been defined for a

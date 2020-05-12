@@ -22,10 +22,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.assertj.core.api.Condition;
 import org.junit.Assert;
 import org.junit.Test;
+import reactor.core.Scannable;
 import reactor.test.StepVerifier;
 import reactor.test.subscriber.AssertSubscriber;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static reactor.core.Scannable.*;
 
 public class MonoUsingTest {
 
@@ -243,5 +245,13 @@ public class MonoUsingTest {
 						            .hasMessage("resourceCleanup")
 						            .is(suppressingFactory) != null);
 
+	}
+
+	@Test
+	public void scanOperator(){
+		AtomicInteger cleanup = new AtomicInteger();
+		Mono<Integer> test = Mono.using(() -> 1, r -> Mono.just(1), cleanup::set, false);
+
+		assertThat(from(test).scan(Attr.RUN_STYLE)).isEqualTo(Attr.RunStyle.SYNC);
 	}
 }

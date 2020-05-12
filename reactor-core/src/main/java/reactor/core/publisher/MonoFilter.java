@@ -45,4 +45,11 @@ final class MonoFilter<T> extends MonoOperator<T, T> {
 		}
 		source.subscribe(new FluxFilter.FilterSubscriber<>(actual, predicate));
 	}
+
+	@Override
+	public Object scanUnsafe(Attr key) {
+		if (key == Attr.RUN_STYLE) return Attr.RunStyle.SYNC;
+		return super.scanUnsafe(key);
+	}
+
 }

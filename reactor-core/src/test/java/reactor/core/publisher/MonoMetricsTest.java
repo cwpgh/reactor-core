@@ -40,6 +40,8 @@ import reactor.core.publisher.MonoMetrics.MicrometerMonoMetricsSubscriber;
 import reactor.test.publisher.TestPublisher;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static reactor.core.Scannable.Attr.RUN_STYLE;
+import static reactor.core.Scannable.Attr.RunStyle.SYNC;
 import static reactor.core.publisher.FluxMetrics.*;
 import static reactor.test.publisher.TestPublisher.Violation.CLEANUP_ON_TERMINATE;
 
@@ -55,6 +57,13 @@ public class MonoMetricsTest {
 	@After
 	public void removeRegistry() {
 		registry.close();
+	}
+
+	@Test
+	public void scanOperator(){
+		MonoMetrics<String> test = new MonoMetrics<>(Mono.just("foo"), registry);
+
+		assertThat(test.scan(RUN_STYLE)).isEqualTo(SYNC);
 	}
 
 	@Test

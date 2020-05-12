@@ -33,6 +33,7 @@ import static org.junit.Assert.*;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertThat;
 import static reactor.core.Fuseable.SYNC;
+import static reactor.core.Scannable.*;
 
 /**
  * Note: as {@link MonoDoFinally} and {@link MonoDoFinallyFuseable} delegate to
@@ -200,6 +201,13 @@ public class MonoDoFinallyTest implements Consumer<SignalType> {
 
 		Assertions.assertThat(finallyOrder)
 		          .containsExactly("SECOND", "FIRST");
+	}
+
+	@Test
+	public void scanOperator(){
+		MonoDoFinally<String> test = new MonoDoFinally<>(Mono.just("foo"), this);
+
+		Assertions.assertThat(test.scanUnsafe(Attr.RUN_STYLE)).isEqualTo(Attr.RunStyle.SYNC);
 	}
 
 }

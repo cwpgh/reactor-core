@@ -77,6 +77,12 @@ final class MonoMetrics<T> extends MonoOperator<T, T> {
 				Clock.SYSTEM, this.name, this.tags));
 	}
 
+	@Override
+	public Object scanUnsafe(Attr key) {
+		if (key == Attr.RUN_STYLE) return Attr.RunStyle.SYNC;
+		return super.scanUnsafe(key);
+	}
+
 	static class MicrometerMonoMetricsSubscriber<T> implements InnerOperator<T,T> {
 
 		final CoreSubscriber<? super T> actual;
@@ -219,6 +225,12 @@ final class MonoMetrics<T> extends MonoOperator<T, T> {
 
 			s.cancel();
 		}
+
+		@Override
+		public Object scanUnsafe(Attr key) {
+			if (key == Attr.RUN_STYLE) return Attr.RunStyle.SYNC;
+			return null;
+		}
 	}
 
 	/**
@@ -296,6 +308,12 @@ final class MonoMetrics<T> extends MonoOperator<T, T> {
 		@Override
 		public int size() {
 			return qs == null ? 0 : qs.size();
+		}
+
+		@Override
+		public Object scanUnsafe(Attr key) {
+			if (key == Attr.RUN_STYLE) return Attr.RunStyle.SYNC;
+			return null;
 		}
 	}
 

@@ -25,6 +25,7 @@ import reactor.test.StepVerifier;
 import reactor.test.subscriber.AssertSubscriber;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static reactor.core.Scannable.*;
 
 public class MonoJustTest {
 
@@ -121,7 +122,8 @@ public class MonoJustTest {
 	@Test
 	public void scanOperator() {
     	MonoJust s = new MonoJust<>("foo");
-    	assertThat(s.scan(Scannable.Attr.BUFFERED)).isEqualTo(1);
+    	assertThat(s.scan(Attr.BUFFERED)).isEqualTo(1);
+    	assertThat(s.scan(Attr.RUN_STYLE)).isEqualTo(Attr.RunStyle.SYNC);
 	}
 
 }

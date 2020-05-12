@@ -16,7 +16,11 @@
 package reactor.core.publisher;
 
 import org.junit.Test;
+import reactor.core.Scannable;
 import reactor.test.StepVerifier;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static reactor.core.Scannable.*;
 
 public class MonoEmptyTest {
 
@@ -24,5 +28,12 @@ public class MonoEmptyTest {
 	public void normal() {
 		StepVerifier.create(Mono.empty())
 		            .verifyComplete();
+	}
+
+	@Test
+	public void scanOperator(){
+		Mono<Object> test = Mono.empty();
+
+		assertThat(from(test).scan(Attr.RUN_STYLE)).isEqualTo(Attr.RunStyle.SYNC);
 	}
 }

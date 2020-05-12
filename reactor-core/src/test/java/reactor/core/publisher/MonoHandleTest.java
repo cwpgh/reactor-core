@@ -16,9 +16,11 @@
 package reactor.core.publisher;
 
 import org.junit.Test;
+import reactor.core.Scannable;
 import reactor.test.subscriber.AssertSubscriber;
 
 import static java.util.Collections.singleton;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class MonoHandleTest {
 
@@ -44,7 +46,6 @@ public class MonoHandleTest {
 
 	@Test
 	public void filterNullMapResult() {
-
 		Mono.just(1)
 		    .handle((v, s) -> { /*ignore*/ })
 		    .subscribeWith(AssertSubscriber.create())
@@ -53,4 +54,10 @@ public class MonoHandleTest {
 		    .assertComplete();
 	}
 
+	@Test
+	public void scanOperator(){
+	    MonoHandle<Integer, Integer> test = new MonoHandle(Mono.just(1), (v, s) -> {});
+
+	    assertThat(test.scanUnsafe(Scannable.Attr.RUN_STYLE)).isEqualTo(Scannable.Attr.RunStyle.SYNC);
+	}
 }

@@ -23,9 +23,11 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.junit.Test;
 import org.reactivestreams.Subscription;
 
+import reactor.core.Scannable;
 import reactor.test.StepVerifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static reactor.core.Scannable.from;
 
 public class MonoCompletionStageTest {
 
@@ -144,5 +146,13 @@ public class MonoCompletionStageTest {
 		            .thenCancel()
 		            .verifyThenAssertThat()
 		            .hasDroppedErrorWithMessage("boom, good bye Future");
+	}
+
+	@Test
+	public void scanOperator(){
+		CompletionStage<String> completionStage = CompletableFuture.supplyAsync(() -> "helloFuture");
+		Mono<String> test = Mono.fromCompletionStage(completionStage);
+
+		assertThat(from(test).scan(Scannable.Attr.RUN_STYLE)).isEqualTo(Scannable.Attr.RunStyle.SYNC);
 	}
 }

@@ -18,12 +18,12 @@ package reactor.core.publisher;
 import java.time.Duration;
 
 import org.junit.Test;
-import reactor.core.Scannable;
 import reactor.core.scheduler.Schedulers;
 import reactor.test.StepVerifier;
 import reactor.util.function.Tuple2;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static reactor.core.Scannable.*;
 
 public class MonoElapsedTest {
 
@@ -46,6 +46,7 @@ public class MonoElapsedTest {
 	public void scanOperator() {
 		MonoElapsed<String> test = new MonoElapsed<>(Mono.empty(), Schedulers.immediate());
 
-		assertThat(test.scan(Scannable.Attr.RUN_ON)).isSameAs(Schedulers.immediate());
+		assertThat(test.scan(Attr.RUN_ON)).isSameAs(Schedulers.immediate());
+		assertThat(test.scan(Attr.RUN_STYLE)).isEqualTo(Attr.RunStyle.ASYNC);
 	}
 }

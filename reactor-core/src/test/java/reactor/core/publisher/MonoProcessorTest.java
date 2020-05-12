@@ -28,9 +28,12 @@ import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
+import org.reactivestreams.tck.TestEnvironment;
+import reactor.core.CoreSubscriber;
 import reactor.core.Scannable;
 import reactor.test.StepVerifier;
 import reactor.test.publisher.TestPublisher;
+import reactor.test.subscriber.AssertSubscriber;
 import reactor.util.function.Tuple2;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -517,6 +520,7 @@ public class MonoProcessorTest {
 		assertThat(test.scan(Scannable.Attr.PREFETCH)).isEqualTo(Integer.MAX_VALUE);
 		assertThat(test.scan(Scannable.Attr.TERMINATED)).isFalse();
 		assertThat(test.scan(Scannable.Attr.CANCELLED)).isFalse();
+		assertThat(test.scan(Scannable.Attr.RUN_STYLE)).isEqualTo(Scannable.Attr.RunStyle.SYNC);
 
 		test.onComplete();
 		assertThat(test.scan(Scannable.Attr.TERMINATED)).isTrue();
@@ -671,5 +675,15 @@ public class MonoProcessorTest {
 
 		processor.subscribe(v -> Assertions.fail("expected late subscriber to error"), late::set);
 		assertThat(late.get()).isInstanceOf(CancellationException.class);
+	}
+
+	@Test
+	public void scanSubscriber(){
+		MonoProcessor<String> processor = MonoProcessor.create();
+		AssertSubscriber<String> subscriber = new AssertSubscriber<>();
+
+		MonoProcessor.NextInner test = new MonoProcessor.NextInner(subscriber, processor);
+
+	    assertThat(test.scanUnsafe(Scannable.Attr.RUN_STYLE)).isEqualTo(Scannable.Attr.RunStyle.SYNC);
 	}
 }

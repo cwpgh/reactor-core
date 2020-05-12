@@ -19,7 +19,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
+import reactor.core.Scannable;
 import reactor.test.StepVerifier;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class MonoRetryPredicateTest {
 
@@ -59,5 +62,12 @@ public class MonoRetryPredicateTest {
 		                        })
 		                        .retry(3, e -> bool.get()))
 		            .verifyErrorMessage("test");
+	}
+
+	@Test
+	public void scanOperator(){
+		MonoRetryPredicate<String> test = new MonoRetryPredicate(Mono.just("foo"), e -> true);
+
+	    assertThat(test.scanUnsafe(Scannable.Attr.RUN_STYLE)).isEqualTo(Scannable.Attr.RunStyle.SYNC);
 	}
 }

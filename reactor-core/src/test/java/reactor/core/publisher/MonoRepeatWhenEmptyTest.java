@@ -18,12 +18,15 @@ package reactor.core.publisher;
 
 import org.junit.Assert;
 import org.junit.Test;
+import reactor.core.Scannable;
 import reactor.test.subscriber.AssertSubscriber;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class MonoRepeatWhenEmptyTest {
 
@@ -91,4 +94,10 @@ public class MonoRepeatWhenEmptyTest {
         Assert.assertEquals(Arrays.asList(0L, 1L), iterations);
     }
 
+    @Test
+    public void scanOperator(){
+        MonoRepeatWhen<Integer> test = new MonoRepeatWhen(Mono.just(1), o -> Mono.empty());
+
+        assertThat(test.scanUnsafe(Scannable.Attr.RUN_STYLE)).isEqualTo(Scannable.Attr.RunStyle.SYNC);
+    }
 }

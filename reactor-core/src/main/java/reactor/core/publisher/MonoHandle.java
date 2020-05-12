@@ -42,4 +42,10 @@ final class MonoHandle<T, R> extends MonoOperator<T, R> {
 	public void subscribe(CoreSubscriber<? super R> actual) {
 		source.subscribe(new FluxHandle.HandleSubscriber<>(actual, handler));
 	}
+
+	@Override
+	public Object scanUnsafe(Attr key) {
+		if (key == Attr.RUN_STYLE) return Attr.RunStyle.SYNC;
+		return super.scanUnsafe(key);
+	}
 }

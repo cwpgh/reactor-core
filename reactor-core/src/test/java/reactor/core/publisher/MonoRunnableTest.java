@@ -17,6 +17,8 @@
 package reactor.core.publisher;
 
 import java.time.Duration;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
@@ -27,12 +29,14 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.reactivestreams.Subscription;
 
+import reactor.core.Scannable;
 import reactor.core.scheduler.Schedulers;
 import reactor.test.StepVerifier;
 import reactor.test.subscriber.AssertSubscriber;
 import reactor.util.function.Tuple2;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static reactor.core.Scannable.from;
 
 public class MonoRunnableTest {
 
@@ -165,5 +169,12 @@ public class MonoRunnableTest {
 		            .verifyComplete();
 
 		assertThat(TimeUnit.NANOSECONDS.toMillis(subscribeTs.get())).isCloseTo(500L, Offset.offset(50L));
+	}
+
+	@Test
+	public void scanOperator(){
+		Mono<String> test = Mono.fromRunnable(() -> { });
+
+		assertThat(from(test).scan(Scannable.Attr.RUN_STYLE)).isEqualTo(Scannable.Attr.RunStyle.SYNC);
 	}
 }

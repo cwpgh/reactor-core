@@ -20,10 +20,12 @@ import java.time.Duration;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
+import reactor.core.Scannable;
 import reactor.test.StepVerifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static reactor.core.Scannable.*;
 
 public class MonoErrorSuppliedTest {
 
@@ -111,5 +113,12 @@ public class MonoErrorSuppliedTest {
 				.withMessage("boom1");
 
 		assertThat(count).as("after call").hasValue(1);
+	}
+
+	@Test
+	public void testOperator(){
+		Mono<Object> test = Mono.error(() -> new NullPointerException());
+
+		assertThat(from(test).scan(Attr.RUN_STYLE)).isEqualTo(Attr.RunStyle.SYNC);
 	}
 }

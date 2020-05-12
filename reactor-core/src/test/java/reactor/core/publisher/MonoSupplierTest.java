@@ -15,14 +15,18 @@
  */
 package reactor.core.publisher;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
+import reactor.core.Scannable;
 import reactor.core.scheduler.Schedulers;
 import reactor.test.StepVerifier;
 import reactor.test.subscriber.AssertSubscriber;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static reactor.core.Scannable.from;
 
 public class MonoSupplierTest {
 
@@ -95,5 +99,12 @@ public class MonoSupplierTest {
 			throw new RuntimeException("test");
 		})
 		    .block();
+	}
+
+	@Test
+	public void scanOperator(){
+		Mono<String> test = Mono.fromSupplier(() -> "test");
+
+		assertThat(from(test).scan(Scannable.Attr.RUN_STYLE)).isEqualTo(Scannable.Attr.RunStyle.SYNC);
 	}
 }

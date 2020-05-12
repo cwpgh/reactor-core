@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.assertj.core.data.Percentage;
 import org.junit.Test;
 
+import reactor.core.Scannable;
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 import reactor.test.StepVerifier;
@@ -310,4 +311,10 @@ public class MonoRetryWhenTest {
 		}
 	}
 
+	@Test
+	public void scanOperator(){
+	    MonoRetryWhen<String> test = new MonoRetryWhen(Mono.just("foo"), flux -> Flux.just("bar"));
+
+	    assertThat(test.scanUnsafe(Scannable.Attr.RUN_STYLE)).isEqualTo(Scannable.Attr.RunStyle.SYNC);
+	}
 }

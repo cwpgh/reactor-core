@@ -21,10 +21,12 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.junit.Test;
 import org.reactivestreams.Subscription;
 import reactor.core.Exceptions;
+import reactor.core.Scannable;
 import reactor.test.StepVerifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static reactor.core.Scannable.*;
 
 public class MonoPeekTest {
 
@@ -164,5 +166,12 @@ public class MonoPeekTest {
 						    .subscribe())
 				.withCauseInstanceOf(NullPointerException.class)
 				.matches(Exceptions::isErrorCallbackNotImplemented, "ErrorCallbackNotImplemented");
+	}
+
+	@Test
+	public void scanOperator(){
+	    MonoPeek test = new MonoPeek(Mono.just(1), null, null, null, null, null, null);
+
+	    assertThat(test.scanUnsafe(Attr.RUN_STYLE)).isEqualTo(Attr.RunStyle.SYNC);
 	}
 }

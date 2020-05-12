@@ -17,8 +17,12 @@
 package reactor.core.publisher;
 
 import org.junit.Test;
+import reactor.core.Scannable;
 import reactor.test.StepVerifier;
 import reactor.test.subscriber.AssertSubscriber;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static reactor.core.Scannable.*;
 
 public class MonoDefaultIfEmptyTest {
 
@@ -164,6 +168,13 @@ public class MonoDefaultIfEmptyTest {
 		  .assertComplete()
 		  .assertNoError();
 
+	}
+
+	@Test
+	public void scanOperator() {
+		MonoDefaultIfEmpty<Integer> test = new MonoDefaultIfEmpty<>(Mono.empty(), 10);
+
+		assertThat(test.scanUnsafe(Attr.RUN_STYLE)).isEqualTo(Attr.RunStyle.SYNC);
 	}
 
 }

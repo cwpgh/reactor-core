@@ -41,6 +41,7 @@ final class MonoElapsed<T> extends MonoOperator<T, Tuple2<Long, T>> implements F
 	@Override
 	public Object scanUnsafe(Attr key) {
 		if (key == Attr.RUN_ON) return scheduler;
+		if (key == Attr.RUN_STYLE) return Attr.RunStyle.ASYNC;
 
 		return super.scanUnsafe(key);
 	}

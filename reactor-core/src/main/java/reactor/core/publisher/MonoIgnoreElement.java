@@ -33,4 +33,10 @@ final class MonoIgnoreElement<T> extends MonoOperator<T, T> {
 	public void subscribe(CoreSubscriber<? super T> actual) {
 		source.subscribe(new MonoIgnoreElements.IgnoreElementsSubscriber<>(actual));
 	}
+
+	@Override
+	public Object scanUnsafe(Attr key) {
+		if (key == Attr.RUN_STYLE) return Attr.RunStyle.SYNC;
+		return super.scanUnsafe(key);
+	}
 }

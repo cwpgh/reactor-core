@@ -47,4 +47,9 @@ final class MonoSubscriberContext<T> extends MonoOperator<T, T> implements Fusea
 		source.subscribe(new FluxContextStart.ContextStartSubscriber<>(actual, c));
 	}
 
+	@Override
+	public Object scanUnsafe(Attr key) {
+		if (key == Attr.RUN_STYLE) return Attr.RunStyle.SYNC;
+		return super.scanUnsafe(key);
+	}
 }

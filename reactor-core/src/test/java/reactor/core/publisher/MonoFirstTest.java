@@ -21,10 +21,12 @@ import java.util.Arrays;
 
 import org.junit.Assert;
 import org.junit.Test;
+import reactor.core.Scannable;
 import reactor.test.StepVerifier;
 import reactor.test.subscriber.AssertSubscriber;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static reactor.core.Scannable.*;
 
 public class MonoFirstTest {
 
@@ -129,5 +131,12 @@ public class MonoFirstTest {
 		            .thenAwait(Duration.ofSeconds(4))
 		            .expectNext(2)
 		            .verifyComplete();
+	}
+
+	@Test
+	public void scanOperator(){
+		Mono<Integer> test = Mono.first(Mono.just(1), Mono.just(2));
+
+		assertThat(from(test).scan(Attr.RUN_STYLE)).isEqualTo(Attr.RunStyle.SYNC);
 	}
 }

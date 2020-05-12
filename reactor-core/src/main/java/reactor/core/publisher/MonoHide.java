@@ -37,4 +37,10 @@ final class MonoHide<T> extends MonoOperator<T, T> {
     public void subscribe(CoreSubscriber<? super T> actual) {
         source.subscribe(new FluxHide.HideSubscriber<>(actual));
     }
+
+    @Override
+    public Object scanUnsafe(Attr key) {
+        if (key == Attr.RUN_STYLE) return Attr.RunStyle.SYNC;
+        return super.scanUnsafe(key);
+    }
 }

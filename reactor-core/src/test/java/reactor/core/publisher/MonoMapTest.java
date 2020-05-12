@@ -19,8 +19,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
+import reactor.core.Scannable;
 import reactor.test.publisher.MonoOperatorTest;
 import reactor.test.subscriber.AssertSubscriber;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static reactor.core.Scannable.*;
 
 public class MonoMapTest extends MonoOperatorTest<String, String> {
 
@@ -194,4 +198,12 @@ public class MonoMapTest extends MonoOperatorTest<String, String> {
 		  .assertNoError()
 		  .assertComplete();
 	}
+
+	@Test
+	public void scanOperator(){
+		MonoMap<String, String> test = new MonoMap<>(Mono.just("foo"), s -> s.toUpperCase());
+
+		assertThat(test.scanUnsafe(Attr.RUN_STYLE)).isEqualTo(Attr.RunStyle.SYNC);
+	}
+
 }

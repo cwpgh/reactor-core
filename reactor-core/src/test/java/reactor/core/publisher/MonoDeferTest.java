@@ -19,6 +19,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Assert;
 import org.junit.Test;
+import reactor.core.Scannable;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static reactor.core.Scannable.from;
 
 public class MonoDeferTest {
 
@@ -32,5 +36,16 @@ public class MonoDeferTest {
 		Assert.assertEquals(source.block().intValue(), 1);
 		Assert.assertEquals(source.block().intValue(), 2);
 		Assert.assertEquals(source.block().intValue(), 3);
+	}
+
+	@Test
+	public void scanMonoDefer() {
+		AtomicInteger i = new AtomicInteger();
+
+		Mono<Integer> test =
+				Mono.defer(() -> Mono.just(i.incrementAndGet()));
+
+		assertThat(from(test).scan(Scannable.Attr.RUN_STYLE)).isEqualTo(Scannable.Attr.RunStyle.SYNC);
+		assertThat(from(test).scan(Scannable.Attr.ACTUAL)).isNull();
 	}
 }

@@ -25,10 +25,12 @@ import org.junit.Test;
 import org.reactivestreams.Subscription;
 
 import reactor.core.Fuseable;
+import reactor.core.Scannable;
 import reactor.test.StepVerifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNullPointerException;
+import static reactor.core.Scannable.*;
 
 public class MonoDoFirstTest {
 
@@ -170,4 +172,10 @@ public class MonoDoFirstTest {
 		assertThat(subRef.get().getClass()).isEqualTo(FluxMapFuseable.MapFuseableSubscriber.class);
 	}
 
+	@Test
+	public void scanOperator(){
+	    MonoDoFirst<String> test = new MonoDoFirst<>(Mono.just("foo"), () -> {});
+
+	    assertThat(test.scanUnsafe(Attr.RUN_STYLE)).isEqualTo(Attr.RunStyle.SYNC);
+	}
 }

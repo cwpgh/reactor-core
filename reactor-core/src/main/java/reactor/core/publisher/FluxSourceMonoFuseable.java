@@ -47,4 +47,11 @@ final class FluxSourceMonoFuseable<I> extends FluxFromMonoOperator<I, I> impleme
 		}
 		return "FluxFromMono(" + source.toString() + ")";
 	}
+
+	@Override
+	public Object scanUnsafe(Attr key) {
+		if (key == Attr.RUN_STYLE) return Attr.RunStyle.SYNC;
+		return super.scanUnsafe(key);
+	}
+
 }

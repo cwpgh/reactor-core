@@ -47,6 +47,10 @@ final class MonoIgnorePublisher<T> extends Mono<T> implements Scannable {
 		if (key == Scannable.Attr.PARENT) {
 			return source;
 		}
+		if (key == Attr.RUN_STYLE) {
+			return Attr.RunStyle.SYNC;
+		}
+
 		return null;
 	}
 }

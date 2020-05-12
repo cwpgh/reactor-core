@@ -350,6 +350,7 @@ public class MonoPublishOnTest {
 		MonoPublishOn<String> test = new MonoPublishOn<>(Mono.empty(), Schedulers.immediate());
 
 		Assertions.assertThat(test.scan(Scannable.Attr.RUN_ON)).isSameAs(Schedulers.immediate());
+		Assertions.assertThat(test.scan(Scannable.Attr.RUN_STYLE)).isEqualTo(Scannable.Attr.RunStyle.ASYNC);
 	}
 
 	@Test
@@ -363,6 +364,7 @@ public class MonoPublishOnTest {
 		Assertions.assertThat(test.scan(Scannable.Attr.RUN_ON)).isSameAs(Schedulers.single());
 		Assertions.assertThat(test.scan(Scannable.Attr.PARENT)).isSameAs(parent);
 		Assertions.assertThat(test.scan(Scannable.Attr.ACTUAL)).isSameAs(actual);
+		Assertions.assertThat(test.scan(Scannable.Attr.RUN_STYLE)).isEqualTo(Scannable.Attr.RunStyle.ASYNC);
 
 		Assertions.assertThat(test.scan(Scannable.Attr.CANCELLED)).isFalse();
 		test.cancel();

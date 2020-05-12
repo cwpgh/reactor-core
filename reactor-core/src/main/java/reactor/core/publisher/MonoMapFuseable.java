@@ -59,4 +59,9 @@ final class MonoMapFuseable<T, R> extends MonoOperator<T, R>
 		source.subscribe(new FluxMapFuseable.MapFuseableSubscriber<>(actual, mapper));
 	}
 
+	@Override
+	public Object scanUnsafe(Attr key) {
+		if (key == Attr.RUN_STYLE) return Attr.RunStyle.SYNC;
+		return super.scanUnsafe(key);
+	}
 }

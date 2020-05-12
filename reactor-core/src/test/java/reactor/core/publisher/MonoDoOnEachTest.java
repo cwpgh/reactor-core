@@ -40,6 +40,7 @@ import reactor.util.function.Tuples;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static reactor.core.Scannable.*;
 
 public class MonoDoOnEachTest {
 
@@ -78,7 +79,7 @@ public class MonoDoOnEachTest {
 	public void usesFluxDoOnEachConditionalSubscriber() {
 		AtomicReference<Scannable> ref = new AtomicReference<>();
 		Mono<String> source = Mono.just("foo")
-		                          .doOnSubscribe(sub -> ref.set(Scannable.from(sub)))
+		                          .doOnSubscribe(sub -> ref.set(from(sub)))
 		                          .hide()
 		                          .filter(t -> true);
 
@@ -526,5 +527,12 @@ public class MonoDoOnEachTest {
 		            .verifyErrorMessage("boom");
 
 		assertThat(errorHandlerCount).as("error handler invoked on top on complete").hasValue(1);
+	}
+
+	@Test
+	public void scanOperator(){
+		final MonoDoOnEach<String> test = new MonoDoOnEach<>(Mono.just("foo"), s -> { });
+
+	    assertThat(test.scanUnsafe(Attr.RUN_STYLE)).isEqualTo(Attr.RunStyle.SYNC);
 	}
 }

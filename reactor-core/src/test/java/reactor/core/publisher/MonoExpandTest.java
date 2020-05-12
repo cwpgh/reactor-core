@@ -29,6 +29,7 @@ import org.junit.Test;
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscription;
 import reactor.core.CoreSubscriber;
+import reactor.core.Scannable;
 import reactor.core.scheduler.Schedulers;
 import reactor.test.StepVerifier;
 import reactor.test.StepVerifierOptions;
@@ -37,6 +38,7 @@ import reactor.test.subscriber.AssertSubscriber;
 import reactor.test.util.RaceTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static reactor.core.Scannable.*;
 
 public class MonoExpandTest {
 	Function<Integer, Publisher<Integer>> countDown =
@@ -520,5 +522,12 @@ public class MonoExpandTest {
 				    .map(n -> n.name))
 		            .expectNextSequence(depthFirstExpected)
 		            .verifyComplete();
+	}
+
+	@Test
+	public void scanOperator(){
+	    MonoExpand<Integer> test = new MonoExpand<>(Mono.just(10), countDown, false, 10);
+
+	    assertThat(test.scanUnsafe(Attr.RUN_STYLE)).isEqualTo(Attr.RunStyle.SYNC);
 	}
 }

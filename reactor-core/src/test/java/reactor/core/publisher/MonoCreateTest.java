@@ -32,6 +32,7 @@ import reactor.test.subscriber.AssertSubscriber;
 import reactor.test.util.RaceTestUtils;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static reactor.core.Scannable.from;
 
 public class MonoCreateTest {
 
@@ -398,6 +399,14 @@ public class MonoCreateTest {
 		            .thenRequest(1)
 		            .expectNext(1L)
 		            .verifyComplete();
+	}
+
+	@Test
+	public void scanMonoCreate() {
+		Mono<String> test = Mono.create(sink -> sink.success("foo"));
+
+		assertThat(from(test).scan(Scannable.Attr.RUN_STYLE)).isEqualTo(Scannable.Attr.RunStyle.SYNC);
+		assertThat(from(test).scan(Scannable.Attr.ACTUAL)).isNull();
 	}
 }
 

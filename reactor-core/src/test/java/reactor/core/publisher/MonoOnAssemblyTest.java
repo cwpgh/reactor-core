@@ -37,6 +37,9 @@ import reactor.core.Scannable;
 import reactor.core.publisher.FluxOnAssembly.AssemblySnapshot;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static reactor.core.Scannable.*;
+import static reactor.core.Scannable.Attr.RUN_STYLE;
+import static reactor.core.Scannable.Attr.RunStyle.SYNC;
 
 public class MonoOnAssemblyTest {
 
@@ -45,7 +48,8 @@ public class MonoOnAssemblyTest {
 		AssemblySnapshot stacktrace = new AssemblySnapshot(null, Traces.callSiteSupplierFactory.get());
 		MonoOnAssembly<?> test = new MonoOnAssembly<>(Mono.empty(), stacktrace);
 
-		assertThat(test.scan(Scannable.Attr.ACTUAL_METADATA)).as("ACTUAL_METADATA").isTrue();
+		assertThat(test.scan(Attr.ACTUAL_METADATA)).as("ACTUAL_METADATA").isTrue();
+		assertThat(test.scan(RUN_STYLE)).isEqualTo(SYNC);
 	}
 
 	@Test

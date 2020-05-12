@@ -32,7 +32,6 @@ import reactor.util.context.Context;
 
 final class MonoFlatMapMany<T, R> extends FluxFromMonoOperator<T, R> {
 
-
 	final Function<? super T, ? extends Publisher<? extends R>> mapper;
 
 	MonoFlatMapMany(Mono<? extends T> source,
@@ -50,6 +49,12 @@ final class MonoFlatMapMany<T, R> extends FluxFromMonoOperator<T, R> {
 			return;
 		}
 		source.subscribe(new FlatMapManyMain<T, R>(actual, mapper));
+	}
+
+	@Override
+	public Object scanUnsafe(Attr key) {
+		if (key == Attr.RUN_STYLE) return Attr.RunStyle.SYNC;
+		return super.scanUnsafe(key);
 	}
 
 	static final class FlatMapManyMain<T, R> implements InnerOperator<T, R> {
@@ -84,7 +89,7 @@ final class MonoFlatMapMany<T, R> extends FluxFromMonoOperator<T, R> {
 		@Nullable
 		public Object scanUnsafe(Attr key) {
 			if (key == Attr.PARENT) return main;
-
+			if (key == Attr.RUN_STYLE) return Attr.RunStyle.SYNC;
 			return InnerOperator.super.scanUnsafe(key);
 		}
 
@@ -228,7 +233,7 @@ final class MonoFlatMapMany<T, R> extends FluxFromMonoOperator<T, R> {
 			if (key == Attr.PARENT) return parent.inner;
 			if (key == Attr.ACTUAL) return parent;
 			if (key == Attr.REQUESTED_FROM_DOWNSTREAM) return parent.requested;
-
+			if (key == Attr.RUN_STYLE) return Attr.RunStyle.SYNC;
 			return null;
 		}
 

@@ -48,4 +48,9 @@ final class MonoDoFinallyFuseable<T> extends MonoOperator<T, T> implements Fusea
 		source.subscribe(FluxDoFinally.createSubscriber(actual, onFinally, true));
 	}
 
+	@Override
+	public Object scanUnsafe(Attr key) {
+		if (key == Attr.RUN_STYLE) return Attr.RunStyle.SYNC;
+		return super.scanUnsafe(key);
+	}
 }
